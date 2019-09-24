@@ -1,6 +1,6 @@
-fastapi==0.26
+fastapi>=0.38
 uvicorn
-pydantic==0.23
+pydantic
 ipaddress
 databases[postgresql]
 sqlalchemy
@@ -16,3 +16,4 @@ asyncpg
 psycopg2
 email-validator
 jinja2
+xlrd

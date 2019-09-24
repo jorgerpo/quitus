@@ -1,7 +1,7 @@
 version: '2'
 services:
   api:
-    image: 5legs/api-cisco
+    image: sncf/quitus
     build:
       context: .
       dockerfile: ./install/Dockerfile
@@ -10,30 +10,39 @@ services:
       - ./app:/app
     ports:
       - 8080:8000
-    # depends_on:
-    #   - db
-    #   - redis
+    depends_on:
+      - db
+      - redis
     env_file:
-      # - ./install/.postgres.env
-      # - ./install/.redis.env
+      - ./install/.postgres.env
+      - ./install/.redis.env
       - ./install/.api.env
 
-  # redis:
-  #   image: redis:4
-  #   command: ["redis-server", "--port", "6379"]
-  #   restart: always
-  #   env_file:
-  #     - ./install/.redis.env
-  #   ports:
-  #     - 6379:6379
+  redis:
+    image: redis:alpine
+    container_name: redis
+    env_file:
+      - ./install/.redis.env
+    links:
+      - db
 
-  # db:
-  #   image: postgres
-  #   restart: always
-  #   env_file:
-  #     - ./install/.postgres.env
-    # ports:
-    #   - 5432:5432
+  db:
+    image: postgres:10-alpine
+    restart: always
+    env_file:
+      - ./install/.postgres.env
+
+  pgweb:
+    container_name: pgweb
+    restart: always
+    image: sosedoff/pgweb
+    links:
+      - db 
+    environment:
+      - DATABASE_URL=postgres://docker:docker@db:5432/quitus?sslmode=disable
+    depends_on:
+      - db
+    
 
 
 

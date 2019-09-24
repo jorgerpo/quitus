@@ -5,8 +5,8 @@ USER 0
 SHELL ["/bin/sh","-c"]
 
 RUN mkdir -p /app && \
-    addgroup --gid 1001 connectivity && \
-    adduser --system --uid 1001 --gid 1001 connectivity 
+    addgroup --gid 1001 quitus && \
+    adduser --system --uid 1001 --gid 1001 quitus 
 
 COPY . /tmp/src
 
