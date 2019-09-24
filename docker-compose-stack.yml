@@ -1,0 +1,46 @@
+version: '3'
+
+
+networks:
+  proxy:
+    external: true
+
+services:
+  api:
+    image: 5legs/api-cisco
+    build:
+      context: .
+      dockerfile: ./install/Dockerfile
+    restart: always
+    volumes:
+      - ./app:/app
+    ports:
+      - 8000:8000
+    # depends_on:
+    #   - db
+    #   - redis
+    env_file:
+      # - ./install/.postgres.env
+      # - ./install/.redis.env
+      - ./install/.api.env
+    networks:
+      - proxy
+
+    deploy:
+      replicas: 1
+      labels:
+      - "traefik.port=8000"
+      - "traefik.docker.backend=api"
+      - "traefik.docker.network=proxy"
+      - "traefik.backend.loadbalancer.method=wrr"
+      - "traefik.frontend.rule=Host:cisco.api.5legs.net"
+      - "traefik.enable=true"
+      - "traefik.backend.healthcheck.port=8000"
+      - "traefik.backend.loadbalancer.stickiness=true"
+      - "traefik.backend.loadbalancer.swarm=true"
+      - "traefik.backend.healthcheck.path=/docs"
+      placement:
+        constraints:
+          - node.role==manager
+
+  # redis:

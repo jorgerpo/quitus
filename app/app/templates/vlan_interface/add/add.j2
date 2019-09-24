@@ -1,0 +1,9 @@
+interface vlan {{ infos.vlan_id }}
+{% if infos.ip_address and infos.ip_masque %}
+ip address {{ infos.ip_address }} {{ infos.ip_masque}}
+{% endif %}
+{% if infos.status in ("enabled","no shut","enable") %}
+no shut
+{% elif infos.status in ("disabled","disable","shut") %}
+shut
+{% endif %}
