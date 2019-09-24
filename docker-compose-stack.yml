@@ -7,7 +7,7 @@ networks:
 
 services:
   api:
-    image: 5legs/api-cisco
+    image: sncf/quitus
     build:
       context: .
       dockerfile: ./install/Dockerfile
@@ -16,12 +16,12 @@ services:
       - ./app:/app
     ports:
       - 8000:8000
-    # depends_on:
-    #   - db
-    #   - redis
+    depends_on:
+      - db
+      - redis
     env_file:
-      # - ./install/.postgres.env
-      # - ./install/.redis.env
+      - ./install/.postgres.env
+      - ./install/.redis.env
       - ./install/.api.env
     networks:
       - proxy
@@ -33,14 +33,28 @@ services:
       - "traefik.docker.backend=api"
       - "traefik.docker.network=proxy"
       - "traefik.backend.loadbalancer.method=wrr"
-      - "traefik.frontend.rule=Host:cisco.api.5legs.net"
+      - "traefik.frontend.rule=Host:quitus.api.5legs.net"
       - "traefik.enable=true"
       - "traefik.backend.healthcheck.port=8000"
       - "traefik.backend.loadbalancer.stickiness=true"
       - "traefik.backend.loadbalancer.swarm=true"
-      - "traefik.backend.healthcheck.path=/docs"
+      - "traefik.backend.healthcheck.path=/openapi"
       placement:
         constraints:
           - node.role==manager
 
-  # redis:
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    env_file:
+      - ./install/.redis.env
+    links:
+      - db
+
+  db:
+    image: postgres:10-alpine
+    restart: always
+    env_file:
+      - ./install/.postgres.env
+
