@@ -1,5 +1,7 @@
 from sqlalchemy.ext.declarative import declarative_base, declared_attr
+
 # from app.db.session import engine
+
 
 class CustomBase(object):
     # Generate __tablename__ automatically

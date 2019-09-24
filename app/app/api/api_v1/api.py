@@ -1,8 +1,5 @@
 from fastapi import APIRouter
   
-from app.api.api_v1.endpoints import vlan, interface, vlan_interface
-
+from app.api.api_v1.endpoints import rule
 api_router = APIRouter()
-api_router.include_router(vlan.router, prefix="/vlan")
-api_router.include_router(interface.router, prefix="/interface")
-api_router.include_router(vlan_interface.router, prefix="/interface-vlan")
+api_router.include_router(rule.router, prefix="/rule")
