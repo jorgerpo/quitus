@@ -4,6 +4,8 @@ version: '3'
 networks:
   proxy:
     external: true
+  app:
+    external: false
 
 services:
   api:
@@ -22,6 +24,7 @@ services:
       - ./install/.redis.env
       - ./install/.api.env
     networks:
+      - app
       - proxy
 
     deploy:
@@ -49,10 +52,14 @@ services:
       - ./install/.redis.env
     links:
       - db
+    networks:
+      - app
 
   db:
     image: postgres:10-alpine
     restart: always
     env_file:
       - ./install/.postgres.env
+    networks:
+      - app
 

@@ -1,6 +1,6 @@
 fastapi>=0.38
 uvicorn
-pydantic
+pydantic>=0.32
 ipaddress
 databases[postgresql]
 sqlalchemy
@@ -8,7 +8,6 @@ netmiko
 pytest-runner
 requests
 docopt
-smc-python
 lxml
 urllib3
 pyping
